@@ -285,9 +285,14 @@ input:focus-visible, textarea:focus-visible, button:focus-visible {
 .colonne .rollup { width: 100%; }
 .option > .visuel > .rollup { width: 132px; }
 
-/* 6 options : 3 colonnes sur grand écran */
-.options.n6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.options.n6 .rangs button { font-size: .9rem; padding: 7px 0; }
+/* 5 ou 6 options : 3 colonnes sur grand écran */
+.options.n5, .options.n6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.options.n5 .rangs button, .options.n6 .rangs button { font-size: .9rem; padding: 7px 0; }
+.rappel-haut { margin: 0 0 14px; }
+
+/* Compteur d'indispensables (grille) */
+.grille-compte { margin: 0 0 8px; font: 600 .9rem var(--titres); color: var(--vert); }
+.grille-compte.alerte { color: var(--brun); }
 
 /* Relation : 2 colonnes sur grand écran, pour que les paires restent lisibles */
 #q-paire .options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -324,12 +329,46 @@ input:focus-visible, textarea:focus-visible, button:focus-visible {
 .mp-logos i { display: block; width: 16%; height: 34%; border-radius: 1px; background: #9a9a9a; }
 .mp-ressort { flex: 1; }
 
-/* Quantité d'information : n éléments dans la même forme */
-.mp-densite .mp-elements {
-  flex: 1; display: grid; grid-template-columns: repeat(var(--cols), 1fr); grid-auto-rows: 22cqw;
-  gap: 4cqw; margin: 3cqw 0 5cqw; align-content: start;
+/* Quantité d'information : même image, puis des lignes pleine largeur réparties sur la hauteur */
+.mp-densite .densite-image { height: 26%; flex: none; }
+.mp-densite .d-lignes { flex: 1; display: flex; flex-direction: column; justify-content: space-evenly; gap: 4cqw; padding: 3cqw 0 4cqw; }
+.d-ligne { display: flex; gap: 3cqw; }
+.d-ligne i { display: block; flex: 1; border-radius: 2cqw; background: #c4c4c4; }
+.d-epaisse i { height: 26cqw; }
+.d-bande i { height: 11cqw; }
+.d-deux i { height: 18cqw; }
+.d-trois i { height: 13cqw; }
+.d-puces { flex-direction: column; gap: 3cqw; }
+.d-puces span { display: flex; align-items: center; gap: 3cqw; }
+.d-puces b { flex: none; width: 4.5cqw; height: 4.5cqw; border-radius: 50%; background: #9a9a9a; }
+.d-puces i { height: 4cqw; }
+
+/* Fond de la bannière : même contenu, quatre fonds (en couleur : c'est ce qu'on compare) */
+.mp-fond.fond-clair { background: #fbfbfb; }
+.mp-fond.fond-fonce { background: var(--vert); }
+.mp-fond.fond-photo { background: url("assets/img/foret_v2_miroir.jpg") center / cover; }
+.mp-fond.fond-motif { background: var(--vert) url("assets/svg/motif_illustrations_blanc.svg") center / 230% auto; }
+.mp-fond.fond-motif::before { content: ""; position: absolute; inset: 0; background: var(--vert); opacity: .62; }
+.mp-fond > * { position: relative; }
+.mp-fond.fond-fonce .mp-titre, .mp-fond.fond-motif .mp-titre { color: #fff; }
+.mp-fond.fond-fonce .mp-texte i, .mp-fond.fond-motif .mp-texte i { background: rgba(255,255,255,.55); }
+.mp-fond.fond-photo .mp-titre { color: #1f2a26; }
+.mp-fond.fond-photo .mp-texte i { background: rgba(40,50,45,.55); }
+
+/* Image en bas, comme l'actuelle */
+.mp-bas .mp-image.bas { height: 40%; flex: none; margin: 0 -8cqw; border-radius: 0; }
+.mp-bas .mp-pied { margin: 0 -8cqw; background: #d6d6d6; display: flex; align-items: center; gap: 4cqw; padding: 4cqw 0 0 8cqw; }
+.mp-bas .mp-pied .mp-qr { width: 18cqw; margin-bottom: 4cqw; }
+.mp-bas .mp-pied .mp-logos { margin: 0; flex: 1; height: auto; align-self: stretch; padding-bottom: 4cqw; }
+
+/* Bande « même paysage » qui traverse les deux bannières (Continuité) */
+.paire.pont { position: relative; }
+.pont-bande {
+  position: absolute; left: 0; right: 0; bottom: 22%; height: 26%;
+  border: 2px dashed var(--brun); border-radius: 4px; pointer-events: none;
+  display: grid; place-items: center;
 }
-.mp-densite .mp-elements i { display: block; border-radius: 2cqw; background: #c4c4c4; }
+.pont-bande span { background: var(--blanc); color: var(--brun); font: 700 .72rem var(--titres); padding: 2px 8px; border-radius: 999px; }
 
 /* A. Image pleine hauteur */
 .mp-pleine { position: relative; }
@@ -342,11 +381,12 @@ input:focus-visible, textarea:focus-visible, button:focus-visible {
 .mp-bandeau .mp-bande { background: #5c5c5c; margin: 0 -8cqw; padding: 6cqw 8cqw; display: grid; gap: 3cqw; }
 .mp-bandeau .mp-bande .mp-titre { color: #fff; }
 .mp-bandeau .mp-bande .mp-texte i { background: #9a9a9a; }
-/* C. Grille de tuiles */
-.mp-tuiles .mp-grille { flex: 1; display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr; gap: 3cqw; margin-bottom: 5cqw; }
+/* C. Grille de tuiles : les mêmes éléments, découpés en tuiles */
+.mp-tuiles .mp-grille { flex: 1; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto 1fr 1fr; gap: 3cqw; margin: 2cqw 0 5cqw; }
 .mp-tuiles .mp-tuile { background: #fff; border-radius: 2cqw; padding: 3cqw; display: grid; align-content: center; }
+.mp-tuiles .mp-large { grid-column: span 2; }
 .mp-tuiles .mp-tuile-qr { place-items: center; }
-.mp-tuiles .mp-image.tuile { height: auto; }
+.mp-tuiles .mp-image.tuile { min-height: 0; }
 /* D. Typographique, fond clair */
 .mp-typo { background: #fbfbfb; }
 .mp-typo .mp-grand-titre { font: 700 16cqw/1 var(--titres); color: #333; margin-top: 4cqw; }
@@ -379,14 +419,16 @@ input:focus-visible, textarea:focus-visible, button:focus-visible {
 .liens-fin span { font-weight: 400; color: var(--gris); }
 
 @media (max-width: 860px) {
-  .options, .options.n6 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .options, .options.n5, .options.n6 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 560px) {
   .intro { grid-template-columns: 1fr; padding: 18px; }
   .intro-v2 { width: 96px; }
   .bloc { padding: 18px; }
-  .options, .options.n6, #q-paire .options { grid-template-columns: 1fr; }
+  .options, .options.n5, .options.n6, #q-paire .options { grid-template-columns: 1fr; }
   .grille { font-size: .88rem; }
   .grille th, .grille td { padding: 8px 4px; }
+  /* Sur téléphone, l'en-tête de la grille sort de l'écran : on répète le niveau sous chaque case. */
+  .grille .sr { position: static; width: auto; height: auto; overflow: visible; clip: auto; font-size: .62rem; color: var(--gris); margin-top: 2px; }
   .entete-logo { height: 36px; }
 }

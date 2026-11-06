@@ -28,10 +28,11 @@
 
   function etatVide(q) {
     if (typeDe(q) === "grille") return { grille: {}, action: "", commentaire: "" };
+    const ids = q.options.map((o) => o.id);
     return {
       rangs: {}, choix: "", eviter: {}, commentaire: "",
-      // Ordre d'affichage tiré au hasard pour chaque répondant (les lettres restent fixes).
-      ordre: melanger(q.options.map((o) => o.id)),
+      // Ordre d'affichage tiré au hasard pour chaque répondant, sauf pour une échelle (ordreFixe).
+      ordre: q.ordreFixe ? ids : melanger(ids),
     };
   }
 
@@ -52,6 +53,7 @@
     const ids = q.options ? q.options.map((o) => o.id).sort().join() : "";
     const valide = garde && (!vide.ordre || (Array.isArray(garde.ordre) && garde.ordre.slice().sort().join() === ids));
     etat[q.id] = valide ? Object.assign(vide, garde) : vide;
+    if (q.ordreFixe) etat[q.id].ordre = q.options.map((o) => o.id);
   });
 
   // ---------- Mini-bannières en blocs gris ----------
@@ -63,19 +65,47 @@
   const MP_QR = '<div class="mp-qr">QR</div>';
   const MP_IMAGE = (classe) => `<div class="mp-image ${classe || ""}"><span>image</span></div>`;
 
+  // Lignes de la question « quantité d'information » : chaque ligne fait toute la largeur,
+  // avec un nombre de blocs et une épaisseur qui varient (bande, deux moitiés, trois tiers, puces).
+  const LIGNE = {
+    bande: () => '<div class="d-ligne d-bande"><i></i></div>',
+    epaisse: () => '<div class="d-ligne d-epaisse"><i></i></div>',
+    deux: () => '<div class="d-ligne d-deux"><i></i><i></i></div>',
+    trois: () => '<div class="d-ligne d-trois"><i></i><i></i><i></i></div>',
+    puces: (n) => `<div class="d-ligne d-puces">${"<span><b></b><i></i></span>".repeat(n)}</div>`,
+  };
+  // Composition par nombre d'éléments (le total des blocs donne bien 1, 3, 6 ou 10).
+  const COMPOSITIONS = {
+    1: [LIGNE.epaisse()],
+    3: [LIGNE.bande(), LIGNE.deux()],
+    6: [LIGNE.epaisse(), LIGNE.deux(), LIGNE.puces(3)],
+    10: [LIGNE.bande(), LIGNE.deux(), LIGNE.trois(), LIGNE.puces(4)],
+  };
+
   const GABARITS = {
-    // Question « quantité d'information » : même forme, de 1 à 10 éléments.
-    densite: (v) => {
-      const n = v.blocs;
-      const cols = n <= 3 ? 1 : 2;
-      const cellules = Array.from({ length: n }, () => "<i></i>").join("");
-      return `
-        <div class="rollup mp mp-densite" aria-hidden="true">
-          ${MP_LOGO}${MP_TITRE}
-          <div class="mp-elements" style="--cols:${cols}">${cellules}</div>
-          ${MP_LOGOS}
-        </div>`;
-    },
+    // Question « quantité d'information » : même forme et même image, de 1 à 10 éléments.
+    densite: (v) => `
+      <div class="rollup mp mp-densite" aria-hidden="true">
+        ${MP_LOGO}${MP_TITRE}${MP_IMAGE("densite-image")}
+        <div class="d-lignes">${COMPOSITIONS[v.blocs].join("")}</div>
+        ${MP_LOGOS}
+      </div>`,
+    // Question « fond » : même contenu, quatre fonds.
+    fond: (v) => `
+      <div class="rollup mp mp-fond fond-${v.fond}" aria-hidden="true">
+        ${MP_LOGO}${MP_TITRE}${MP_TEXTE}
+        <div class="mp-ressort"></div>
+        ${MP_QR}
+        <div class="mp-ressort"></div>
+        ${MP_LOGOS}
+      </div>`,
+    mp_bas: () => `
+      <div class="rollup mp mp-bas" aria-hidden="true">
+        ${MP_LOGO}${MP_TITRE}${MP_TEXTE}
+        <div class="mp-ressort"></div>
+        ${MP_IMAGE("bas")}
+        <div class="mp-pied">${MP_QR}${MP_LOGOS}</div>
+      </div>`,
     // Question « mise en page » : mêmes éléments, quatre dispositions.
     mp_pleine: () => `
       <div class="rollup mp mp-pleine" aria-hidden="true">
@@ -92,11 +122,12 @@
       </div>`,
     mp_tuiles: () => `
       <div class="rollup mp mp-tuiles" aria-hidden="true">
-        ${MP_LOGO}${MP_TITRE}
+        ${MP_LOGO}
         <div class="mp-grille">
-          ${MP_IMAGE("tuile")}<div class="mp-tuile">${MP_TEXTE}</div>
-          <div class="mp-tuile">${MP_TEXTE}</div>${MP_IMAGE("tuile")}
-          <div class="mp-tuile mp-tuile-qr">${MP_QR}</div><div class="mp-tuile">${MP_TEXTE}</div>
+          <div class="mp-tuile mp-large">${MP_TITRE}</div>
+          ${MP_IMAGE("tuile mp-large")}
+          <div class="mp-tuile">${MP_TEXTE}</div>
+          <div class="mp-tuile mp-tuile-qr">${MP_QR}</div>
         </div>
         ${MP_LOGOS}
       </div>`,
@@ -194,7 +225,7 @@
       </div>`,
     continuite: () => `
       <div class="rollup sch s-clair s-continue" aria-hidden="true">
-        ${bloc("s-logo", "logo")}${bloc("s-message", "message")}${bloc("s-image s-pleine-largeur", "image qui continue")}${bloc("s-logos", "partenaires")}
+        ${bloc("s-logo", "logo")}${bloc("s-message", "message")}${bloc("s-image s-pleine-largeur", "")}${bloc("s-logos", "partenaires")}
       </div>`,
     independante: () => `
       <div class="rollup sch s-blanc" aria-hidden="true">
@@ -227,9 +258,12 @@
       return GABARITS[v.gabarit](v);
     }
     if (v.type === "schema") {
-      return `<div class="paire">
+      // « pont » : une bande traverse les deux bannières à la hauteur de la forêt (Continuité).
+      const pont = v.pont ? '<div class="pont-bande" aria-hidden="true"><span>même paysage</span></div>' : "";
+      return `<div class="paire${v.pont ? " pont" : ""}">
         <div class="colonne"><div class="rollup v2" aria-hidden="true"></div><div class="etiquette">Actuelle</div></div>
         <div class="colonne">${SCHEMAS[v.gabarit]()}<div class="etiquette">Nouvelle</div></div>
+        ${pont}
       </div>`;
     }
     return "";
@@ -240,7 +274,7 @@
   function optionHTML(q, o, lettre) {
     const nomEviter = `eviter-${q.id}-${o.id}`;
     const selection = typeDe(q) === "choix"
-      ? `<label class="choix-unique"><input type="radio" name="choix-${q.id}" value="${o.id}"> Je choisis ce niveau</label>`
+      ? `<label class="choix-unique"><input type="radio" name="choix-${q.id}" value="${o.id}"> ${q.libelleChoix || "Je choisis cette option"}</label>`
       : `<div class="rangs" role="group" aria-label="Rang de l'option ${lettre}, ${o.nom}">
            ${rangsDe(q).map((r) => `<button type="button" data-rang="${r}" aria-pressed="false">${r}</button>`).join("")}
          </div>
@@ -265,7 +299,11 @@
       </tr>`).join("");
     const actions = q.action.choix.map((c) => `
       <label class="pastille"><input type="radio" name="action-${q.id}" value="${c.id}"> ${c.nom}</label>`).join("");
+    const compte = q.maxIndispensable
+      ? `<p class="grille-compte" aria-live="polite"></p>`
+      : "";
     return `
+      ${compte}
       <div class="grille-cadre">
         <table class="grille">
           <thead><tr><th></th>${q.niveaux.map((n) => `<th scope="col">${n.nom}</th>`).join("")}</tr></thead>
@@ -280,7 +318,7 @@
 
   const COMMENTAIRE = `
     <div class="commentaire">
-      <label>Commentaires <span>Ce que vous aimez, ce qu'il faudrait tester ou combiner, et ce qui manque (une option à laquelle nous n'avons pas pensé).</span>
+      <label>Commentaires <span>Ce que vous aimez, ce qu'il faudrait tester ou combiner, et ce qui manque (une option à laquelle nous n'avons pas pensé). Nommez les options (par exemple « Miroir »), pas leur lettre : l'ordre change d'une personne à l'autre.</span>
         <textarea rows="3" data-champ="commentaire" placeholder="Facultatif"></textarea>
       </label>
     </div>`;
@@ -297,7 +335,11 @@
       } else {
         const parId = Object.fromEntries(q.options.map((o) => [o.id, o]));
         corps = `<div class="options n${q.options.length}">${etat[q.id].ordre.map((id, pos) => optionHTML(q, parId[id], LETTRES[pos])).join("")}</div>`;
-        if (typeDe(q) === "classement") corps += `<p class="rappel" aria-live="polite"></p>`;
+        if (typeDe(q) === "classement") {
+          corps += `<p class="rappel" aria-live="polite"></p>`;
+          // Avec plus de 4 options, le rappel est aussi affiché en haut (utile sur téléphone).
+          if (q.options.length > 4) corps = `<p class="rappel rappel-haut"></p>` + corps;
+        }
       }
       section.innerHTML = `
         <h2><span class="num">${i + 1}</span>${q.titre}</h2>
@@ -332,7 +374,22 @@
       });
     });
     section.querySelectorAll("input[data-element]").forEach((r) => {
-      r.addEventListener("change", () => { s.grille[r.dataset.element] = r.value; rafraichir(q.id); sauver(); });
+      r.addEventListener("change", () => {
+        const el = r.dataset.element;
+        const max = q.maxIndispensable;
+        if (max && r.value === "indispensable") {
+          const deja = Object.entries(s.grille).filter(([k, v]) => k !== el && v === "indispensable").length;
+          if (deja >= max) {
+            // Refus : on remet le choix précédent et on explique.
+            r.checked = false;
+            rafraichir(q.id, `Vous avez déjà ${max} indispensables. Passez-en un à « Bienvenu » pour en choisir un autre.`);
+            return;
+          }
+        }
+        s.grille[el] = r.value;
+        rafraichir(q.id);
+        sauver();
+      });
     });
     section.querySelectorAll('input[name^="action-"]').forEach((r) => {
       r.addEventListener("change", () => { s.action = r.value; rafraichir(q.id); sauver(); });
@@ -408,7 +465,7 @@
     sauver();
   }
 
-  function rafraichir(qid) {
+  function rafraichir(qid, avertissement) {
     const q = QUESTIONS.find((x) => x.id === qid);
     const s = etat[qid];
     const section = document.getElementById("q-" + qid);
@@ -417,6 +474,12 @@
         const r = section.querySelector(`input[data-element="${el}"][value="${niv}"]`);
         if (r) r.checked = true;
       });
+      const compte = section.querySelector(".grille-compte");
+      if (compte) {
+        const n = Object.values(s.grille).filter((v) => v === "indispensable").length;
+        compte.textContent = avertissement || `Indispensables : ${n} sur ${q.maxIndispensable} au plus.`;
+        compte.classList.toggle("alerte", !!avertissement);
+      }
       if (s.action) {
         const r = section.querySelector(`input[name="action-${qid}"][value="${s.action}"]`);
         if (r) r.checked = true;
@@ -435,14 +498,15 @@
         ev.checked = !!s.eviter[id];
         carte.classList.toggle("a-eviter", !!s.eviter[id]);
       });
-      const rappel = section.querySelector(".rappel");
-      if (rappel) {
+      const rappels = section.querySelectorAll(".rappel");
+      if (rappels.length) {
         const nomDe = Object.fromEntries(q.options.map((o) => [o.id, o.nom]));
         const classees = Object.keys(s.rangs).filter((k) => nomDe[k]).sort((a, b) => s.rangs[a] - s.rangs[b]);
         const n = q.options.length;
-        rappel.textContent = classees.length
+        const texte = classees.length
           ? "Votre ordre : " + classees.map((k) => nomDe[k]).join(" › ") + (classees.length < n ? " (à compléter)" : "")
           : `Classez les ${n} options : cliquez un rang sous chaque option.`;
+        rappels.forEach((p) => { p.textContent = texte; });
       }
     }
     if (complet(qid)) section.classList.remove("manque");

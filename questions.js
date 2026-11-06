@@ -25,8 +25,8 @@ window.QUESTIONS = [
       "Au kiosque, les deux bannières sont montées côte à côte. Comment doivent-elles se répondre ? À droite, la nouvelle est un simple schéma en blocs : on regarde la relation, pas le style.",
     options: [
       { id: "miroir", nom: "Miroir", description: "Même structure que la bannière actuelle : logo en haut, image en bas, bande de logos. Le contenu change.", visuel: { type: "schema", gabarit: "miroir" } },
-      { id: "contraste", nom: "Contraste", description: "Même famille, mais l'inverse : la nouvelle est foncée là où l'actuelle est claire.", visuel: { type: "schema", gabarit: "contraste" } },
-      { id: "continuite", nom: "Continuité", description: "L'image du bas se prolonge d'une bannière à l'autre, à la même hauteur : les deux forment un seul paysage.", visuel: { type: "schema", gabarit: "continuite" } },
+      { id: "contraste", nom: "Contraste", description: "Même structure que l'actuelle, couleurs inversées : la nouvelle est foncée là où l'actuelle est claire.", visuel: { type: "schema", gabarit: "contraste" } },
+      { id: "continuite", nom: "Continuité", description: "Un seul paysage pour les deux : l'image du bas traverse d'une bannière à l'autre, à la même hauteur.", visuel: { type: "schema", gabarit: "continuite", pont: true } },
       { id: "independante", nom: "Indépendante", description: "Seuls le logo et les couleurs sont communs ; la nouvelle a sa propre mise en page.", visuel: { type: "schema", gabarit: "independante" } },
     ],
   },
@@ -79,7 +79,8 @@ window.QUESTIONS = [
     type: "grille",
     titre: "Ce que la bannière contient",
     consigne:
-      "Sous le message, quels éléments sont indispensables ? On parle du contenu, pas de la forme. Puis choisissez où la bannière doit mener la personne.",
+      "Sous le message, quels éléments sont indispensables ? On parle du contenu, pas de la forme. Choisissez au plus 3 indispensables : une bannière ne peut pas tout dire. Puis choisissez où la bannière doit mener la personne.",
+    maxIndispensable: 3,
     niveaux: [
       { id: "indispensable", nom: "Indispensable" },
       { id: "bienvenu", nom: "Bienvenu" },
@@ -89,7 +90,6 @@ window.QUESTIONS = [
       { id: "chiffres", nom: "Des chiffres clés (observations, espèces, sites)" },
       { id: "volets", nom: "Les 4 volets de la mission (partenariat scientifique, état de la biodiversité, analyses, outils d'aide à la décision)" },
       { id: "outils", nom: "La liste de nos plateformes (Atlas, réseau de suivi, indicateurs, Bioscope, rAtlas)" },
-      { id: "carte", nom: "Une carte de données" },
       { id: "qr", nom: "Un code QR (vers la destination choisie ci-dessous)" },
       { id: "partenaires", nom: "Les logos des partenaires" },
       { id: "web", nom: "L'adresse du site web" },
@@ -110,9 +110,11 @@ window.QUESTIONS = [
   {
     id: "densite",
     type: "choix",
+    ordreFixe: true, // une échelle : on garde l'ordre 1, 3, 6, 10
+    libelleChoix: "Je choisis ce niveau",
     titre: "La quantité d'information",
     consigne:
-      "Une bannière se lit en marchant. Jusqu'où aller ? Choisissez le niveau qui vous semble juste. Chaque bloc gris représente un élément (titre, chiffre, phrase, image…).",
+      "Une bannière se lit en marchant. Jusqu'où aller ? Choisissez le niveau qui vous semble juste. Sous le titre et l'image, chaque bloc gris représente un élément (phrase, chiffre, liste…) ; leur disposition n'est qu'un exemple.",
     options: [
       { id: "une", nom: "Une idée", description: "Logo, une phrase, une adresse.", visuel: { type: "maquette", gabarit: "densite", blocs: 1 } },
       { id: "quelques", nom: "Quelques repères", description: "Un message et 3 éléments courts.", visuel: { type: "maquette", gabarit: "densite", blocs: 3 } },
@@ -122,27 +124,42 @@ window.QUESTIONS = [
   },
   {
     id: "visuels",
-    titre: "Le type d'image",
+    titre: "L'élément visuel principal",
     consigne:
-      "Quel type d'image aimeriez-vous voir sur la bannière ? Classez les 6 options. Tous les exemples viennent de nos réalisations : jugez le type d'image, pas cet exemple en particulier.",
+      "Quelle image doit porter le message ? Classez les 6 options. Le fond de la bannière vient à la question suivante. Tous les exemples viennent de nos réalisations : jugez le type d'image, pas cet exemple en particulier.",
     options: [
-      { id: "motif", nom: "Le motif d'illustrations", description: "Les dessins de la marque (jumelles, scarabée, gouttes, plantes…) répétés en motif.", visuel: { type: "image", src: "assets/img/motif.jpg", legende: "Motif de la marque (Figma)" } },
+      { id: "illustration", nom: "Une grande illustration de la marque", description: "Les dessins de la marque (oiseau, quenouilles, fleurs, gouttes…), réunis en une grande illustration.", visuel: { type: "image", src: "assets/img/illustration.jpg", legende: "Dessins du guide de l'identité visuelle, regroupés" } },
       { id: "pictos", nom: "Les cartes-pictogrammes du Québec", description: "Une silhouette du Québec qui symbolise un type de données : sites du réseau de suivi, observations, aires de répartition, tendances. On peut en créer d'autres.", visuel: { type: "image", src: "assets/img/cartes_pictos.jpg", legende: "Cartes de l'affiche de 2022" } },
-      { id: "plateformes", nom: "Nos plateformes dans un ordinateur ou un téléphone", description: "Une capture d'une de nos plateformes dans un appareil : la page d'accueil du portail, l'Atlas, le réseau de suivi ou Bioscope.", visuel: { type: "image", src: "assets/img/portail_appareils.jpg", legende: "Exemple : l'Atlas, page Découvrir" } },
+      { id: "plateformes", nom: "Nos plateformes dans un ordinateur ou un téléphone", description: "Une capture d'une de nos plateformes dans un appareil : la page d'accueil du portail, l'Atlas, le réseau de suivi ou Bioscope.", visuel: { type: "image", src: "assets/img/plateformes_bioscope.jpg", legende: "Exemple : Bioscope (maquette de l'interface)" } },
       { id: "photos", nom: "Des photos de terrain ou d'espèces", description: "Le réseau au travail, ou les espèces suivies.", visuel: { type: "image", src: "assets/img/terrain.jpg", legende: "Photothèque du portail" } },
-      { id: "cartes", nom: "Des cartes de données (une ou plusieurs)", description: "De vraies cartes, lisibles : observations de l'Atlas, sites du réseau de suivi, aire de répartition d'une espèce… Une grande ou plusieurs petites.", visuel: { type: "image", src: "assets/img/atlas_carte.jpg", legende: "Exemple : nombre d'espèces observées (Atlas)" } },
+      { id: "cartes", nom: "Des cartes de données (une ou plusieurs)", description: "De vraies cartes, lisibles : observations, sites du réseau de suivi, aire de répartition d'une espèce… Une grande ou plusieurs petites.", visuel: { type: "image", src: "assets/img/carte_donnees.jpg", legende: "Exemple : nombre d'espèces observées" } },
       { id: "diagramme", nom: "Un diagramme méthodologique", description: "Un schéma qui montre comment on passe des données aux indicateurs, puis à la décision.", visuel: { type: "image", src: "assets/img/diagramme_bioscope.jpg", legende: "Exemple : le parcours des données dans Bioscope (2026)" } },
+    ],
+  },
+  {
+    id: "fond",
+    type: "choix",
+    libelleChoix: "Je choisis ce fond",
+    titre: "Le fond de la bannière",
+    consigne:
+      "Sur quoi le reste est-il posé ? Choisissez un fond. Le contenu par-dessus est le même dans les quatre exemples.",
+    options: [
+      { id: "clair", nom: "Uni clair", description: "Un fond blanc ou très pâle, sans image.", visuel: { type: "maquette", gabarit: "fond", fond: "clair" } },
+      { id: "fonce", nom: "Uni foncé", description: "Le vert foncé de la marque, sans image.", visuel: { type: "maquette", gabarit: "fond", fond: "fonce" } },
+      { id: "photo", nom: "Une photo", description: "Une photo occupe le fond, comme la forêt de la bannière actuelle.", visuel: { type: "maquette", gabarit: "fond", fond: "photo" } },
+      { id: "motif", nom: "Le motif d'illustrations", description: "Les dessins de la marque répétés en motif, discrets, sur un fond de couleur.", visuel: { type: "maquette", gabarit: "fond", fond: "motif" } },
     ],
   },
   {
     id: "style",
     titre: "La mise en page",
     consigne:
-      "Les quatre bannières contiennent exactement les mêmes éléments (logo, titre, texte, image, code QR, partenaires). Seule leur disposition change. Tout est en gris : les couleurs et les images viendront plus tard.",
+      "Les cinq bannières contiennent exactement les mêmes éléments (logo, titre, texte, une image, code QR, partenaires). Seule leur disposition change. Tout est en gris : les couleurs et les images viendront plus tard.",
     options: [
-      { id: "pleine", nom: "Image pleine hauteur", description: "L'image occupe toute la bannière ; le texte est posé dessus.", visuel: { type: "maquette", gabarit: "mp_pleine" } },
+      { id: "bas", nom: "Image en bas, comme l'actuelle", description: "Logo et message en haut, l'image dans le bas, la bande de logos au pied.", visuel: { type: "maquette", gabarit: "mp_bas" } },
+      { id: "pleine", nom: "Image en grand, texte posé dessus", description: "L'image occupe toute la bannière ; le texte est posé dessus. Imaginez une photo forte.", visuel: { type: "maquette", gabarit: "mp_pleine" } },
       { id: "bandeau", nom: "Image et bandeau", description: "L'image en haut, le message dans un bandeau plein, le reste en dessous.", visuel: { type: "maquette", gabarit: "mp_bandeau" } },
-      { id: "tuiles", nom: "Grille de tuiles", description: "Le contenu est découpé en tuiles, comme un tableau de bord.", visuel: { type: "maquette", gabarit: "mp_tuiles" } },
+      { id: "tuiles", nom: "Grille de tuiles", description: "Les mêmes éléments, découpés en tuiles, comme un tableau de bord.", visuel: { type: "maquette", gabarit: "mp_tuiles" } },
       { id: "typo", nom: "Typographique, fond clair", description: "Un très grand titre domine ; l'image est petite.", visuel: { type: "maquette", gabarit: "mp_typo" } },
     ],
   },
