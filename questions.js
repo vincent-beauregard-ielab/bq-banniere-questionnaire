@@ -24,9 +24,9 @@ window.QUESTIONS = [
     consigne:
       "Au kiosque, les deux bannières sont montées côte à côte. Comment doivent-elles se répondre ? À droite, la nouvelle est un simple schéma en blocs : on regarde la relation, pas le style.",
     options: [
-      { id: "miroir", nom: "Miroir", description: "Même structure que la bannière actuelle : logo en haut, image en bas, bande de logos. Le contenu change.", visuel: { type: "schema", gabarit: "miroir" } },
+      { id: "miroir", nom: "Miroir", description: "Même structure que la bannière actuelle (logo en haut, image en bas, bande de logos), mais une autre image et un autre contenu.", visuel: { type: "schema", gabarit: "miroir" } },
       { id: "contraste", nom: "Contraste", description: "Même structure que l'actuelle, couleurs inversées : la nouvelle est foncée là où l'actuelle est claire.", visuel: { type: "schema", gabarit: "contraste" } },
-      { id: "continuite", nom: "Continuité", description: "Un seul paysage pour les deux : l'image du bas traverse d'une bannière à l'autre, à la même hauteur.", visuel: { type: "schema", gabarit: "continuite", pont: true } },
+      { id: "meme_photo", nom: "Même photo, inversée", description: "La nouvelle reprend la forêt de l'actuelle, retournée en miroir, à la même hauteur : les deux forment une paire symétrique. Seul le contenu du haut change.", visuel: { type: "schema", gabarit: "meme_photo" } },
       { id: "independante", nom: "Indépendante", description: "Seuls le logo et les couleurs sont communs ; la nouvelle a sa propre mise en page.", visuel: { type: "schema", gabarit: "independante" } },
     ],
   },

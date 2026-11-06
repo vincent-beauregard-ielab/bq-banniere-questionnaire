@@ -8,6 +8,14 @@
 
 const TAILLE_MAX = 50000; // caractères : un envoi normal en fait environ 2 000
 
+// Identifiant du Google Sheet (dans son adresse, entre /d/ et /edit).
+// Laisser vide si le script est créé depuis le Sheet (Extensions → Apps Script).
+const ID_CLASSEUR = "";
+
+function classeur() {
+  return ID_CLASSEUR ? SpreadsheetApp.openById(ID_CLASSEUR) : SpreadsheetApp.getActiveSpreadsheet();
+}
+
 function doPost(e) {
   const verrou = LockService.getScriptLock();
   try {
@@ -19,8 +27,8 @@ function doPost(e) {
     if (!donnees.nom || !donnees.ronde) return repondre({ ok: false, erreur: "nom ou ronde manquant" });
 
     const ronde = String(donnees.ronde).replace(/[^0-9A-Za-z_-]/g, "").slice(0, 10);
-    const classeur = SpreadsheetApp.getActiveSpreadsheet();
-    const onglet = classeur.getSheetByName("ronde_" + ronde) || classeur.insertSheet("ronde_" + ronde);
+    const cl = classeur();
+    const onglet = cl.getSheetByName("ronde_" + ronde) || cl.insertSheet("ronde_" + ronde);
 
     donnees.recu_le = new Date().toISOString();
 

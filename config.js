@@ -4,7 +4,7 @@ window.CONFIG = {
   RONDE: "1",
 
   // URL du script Google (Déployer → Application Web). Laisser vide pour tester sans envoi.
-  ENDPOINT: "",
+  ENDPOINT: "https://script.google.com/macros/s/AKfycbzy8JZ36OWSvLS9SwfagaxVLc77RvzTSiOrgnbBdDuLpdLv1UoPQxLBMVp1xQpgxaUHLw/exec",
 
   // Exemples externes choisis par l'équipe, affichés dans la dernière section.
   // Des liens seulement : on n'héberge pas les images d'autres organisations.

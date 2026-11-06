@@ -223,9 +223,9 @@
       <div class="rollup sch s-fonce" aria-hidden="true">
         ${bloc("s-logo", "logo")}${bloc("s-message", "message")}${bloc("s-image", "image")}${bloc("s-logos", "partenaires")}
       </div>`,
-    continuite: () => `
-      <div class="rollup sch s-clair s-continue" aria-hidden="true">
-        ${bloc("s-logo", "logo")}${bloc("s-message", "message")}${bloc("s-image s-pleine-largeur", "")}${bloc("s-logos", "partenaires")}
+    meme_photo: () => `
+      <div class="rollup sch s-clair s-meme-photo" aria-hidden="true">
+        ${bloc("s-logo", "logo")}${bloc("s-message", "message")}<div class="s-photo-miroir"></div>${bloc("s-logos", "partenaires")}
       </div>`,
     independante: () => `
       <div class="rollup sch s-blanc" aria-hidden="true">

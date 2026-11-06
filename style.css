@@ -297,8 +297,9 @@ input:focus-visible, textarea:focus-visible, button:focus-visible {
 /* Relation : 2 colonnes sur grand écran, pour que les paires restent lisibles */
 #q-paire .options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
-/* Continuité : l'image touche les bords, à la même hauteur que la forêt de la bannière actuelle */
-.s-continue .s-pleine-largeur { margin: 0 -8cqw; border-radius: 0; border-width: 1.5px 0; }
+/* Même photo, inversée : la forêt de la bannière actuelle, retournée, à la même hauteur */
+.s-photo-miroir { flex: 1; margin: 0 -8cqw; background: url("assets/img/foret_v2_miroir.jpg") center bottom / cover no-repeat; }
+.s-meme-photo { background: linear-gradient(#f0f1f0, #e6e9e7); }
 .s-blanc { background: var(--blanc); color: var(--vert); }
 .s-blanc .s-logos { background: var(--blanc); }
 .s-blanc .s-message { margin-right: 10cqw; }
