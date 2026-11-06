@@ -2,7 +2,7 @@
 
 Page statique (GitHub Pages) qui recueille l'avis de l'équipe sur une deuxième bannière rollup, en 2 ou 3 rondes. Les réponses vont dans un Google Sheet, une ligne par envoi.
 
-Ce dépôt est public et temporaire. Il ne contient que ce qui peut être publié : les maquettes, nos propres visuels et les logos. Les notes de travail, les décisions et les réponses restent dans le dossier de travail local `work/COORDO_banniere_rollup_20261106`.
+Ce dépôt est public et temporaire. Il ne contient que ce qui peut être publié : les maquettes, nos propres visuels et les logos. Sur le poste de travail, il vit dans le sous-dossier `questionnaire/` d'un dossier de travail local. Les notes, les décisions, les sources et les réponses restent dans ce dossier parent, qui n'est jamais publié.
 
 ## Fichiers
 
