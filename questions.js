@@ -109,12 +109,10 @@ window.QUESTIONS = [
   },
   {
     id: "densite",
-    type: "choix",
     ordreFixe: true, // une échelle : on garde l'ordre 1, 3, 6, 10
-    libelleChoix: "Je choisis ce niveau",
     titre: "La quantité d'information",
     consigne:
-      "Une bannière se lit en marchant. Jusqu'où aller ? Choisissez le niveau qui vous semble juste. Sous le titre et l'image, chaque bloc gris représente un élément (phrase, chiffre, liste…) ; leur disposition n'est qu'un exemple.",
+      "Une bannière se lit en marchant. Jusqu'où aller ? Classez les 4 niveaux, du plus juste (1) au moins juste (4). Sous le titre et l'image, chaque bloc gris représente un élément (phrase, chiffre, liste…) ; leur disposition n'est qu'un exemple.",
     options: [
       { id: "une", nom: "Une idée", description: "Logo, une phrase, une adresse.", visuel: { type: "maquette", gabarit: "densite", blocs: 1 } },
       { id: "quelques", nom: "Quelques repères", description: "Un message et 3 éléments courts.", visuel: { type: "maquette", gabarit: "densite", blocs: 3 } },
@@ -138,11 +136,9 @@ window.QUESTIONS = [
   },
   {
     id: "fond",
-    type: "choix",
-    libelleChoix: "Je choisis ce fond",
     titre: "Le fond de la bannière",
     consigne:
-      "Sur quoi le reste est-il posé ? Choisissez un fond. Le contenu par-dessus est le même dans les quatre exemples.",
+      "Sur quoi le reste est-il posé ? Classez les 4 fonds. Le contenu par-dessus est le même dans les quatre exemples.",
     options: [
       { id: "clair", nom: "Uni clair", description: "Un fond blanc ou très pâle, sans image.", visuel: { type: "maquette", gabarit: "fond", fond: "clair" } },
       { id: "fonce", nom: "Uni foncé", description: "Le vert foncé de la marque, sans image.", visuel: { type: "maquette", gabarit: "fond", fond: "fonce" } },
