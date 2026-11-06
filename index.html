@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bannière BQ · Ronde 1</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cabin:wght@500;600;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="entete">
+    <img class="entete-logo" src="assets/svg/logo_horizontal_blanc.svg" alt="Biodiversité Québec">
+    <div class="entete-ronde">Ronde 1 · basse fidélité</div>
+  </header>
+
+  <main>
+    <section class="intro">
+      <figure class="intro-v2">
+        <img src="assets/img/v2.jpg" alt="Bannière actuelle : logo, phrase de présentation et forêt dans la brume">
+        <figcaption>La bannière actuelle</figcaption>
+      </figure>
+      <div class="intro-texte">
+      <h1>Une deuxième bannière pour nos kiosques</h1>
+      <p>Notre bannière actuelle dit <strong>qui nous sommes</strong>. Nous voulons une deuxième bannière rollup, montée à côté, qui complète ce message dans les forums et les campagnes.</p>
+      <p>Cette première ronde sert à choisir une <strong>direction</strong>, pas un design final. Les maquettes sont volontairement sommaires.</p>
+      <ul class="intro-consignes">
+        <li><strong>6 questions</strong>, environ 12 minutes.</li>
+        <li>Le plus souvent, vous <strong>classez les options, de 1 (préférée) au dernier rang</strong>. Chaque rang ne sert qu'une fois ; la dernière option se classe toute seule. Deux questions demandent plutôt un choix ou un tri.</li>
+        <li>Une option vous semble à proscrire ? Cochez <strong>« À éviter »</strong> sous elle, même si vous l'avez classée.</li>
+        <li>Les options sont présentées dans un ordre au hasard : ne vous fiez pas à leur position.</li>
+        <li>Les commentaires sont facultatifs, mais précieux : ce que vous aimez, ce qu'il faudrait tester, <strong>ce qui manque</strong>.</li>
+        <li>Vos réponses sont vues seulement par l'équipe de coordination.</li>
+      </ul>
+      </div>
+    </section>
+
+    <form id="formulaire" novalidate>
+      <section class="bloc identite">
+        <label class="champ">
+          <span>Votre prénom et nom <em>(obligatoire)</em></span>
+          <input type="text" name="nom" required autocomplete="name">
+        </label>
+        <fieldset class="champ">
+          <legend>Vous tenez des kiosques…</legend>
+          <label class="pastille"><input type="radio" name="kiosque" value="souvent"> souvent</label>
+          <label class="pastille"><input type="radio" name="kiosque" value="parfois"> parfois</label>
+          <label class="pastille"><input type="radio" name="kiosque" value="jamais"> jamais</label>
+        </fieldset>
+      </section>
+
+      <div id="questions"></div>
+
+      <section class="bloc">
+        <h2><span class="num">7</span>Autre chose ?</h2>
+        <p class="consigne">Une idée qui n'entre dans aucune case, un élément qui manque, une combinaison à tester.</p>
+        <textarea name="libre" rows="4" placeholder="Facultatif"></textarea>
+        <div id="externes" class="externes" hidden></div>
+        <label class="liens-fin">Exemples vus ailleurs <span>Liens vers des bannières, kiosques ou visuels qui vous ont inspiré, dans n'importe quel domaine. Un lien par ligne.</span>
+          <textarea name="liens" rows="3" placeholder="https://..."></textarea>
+        </label>
+      </section>
+
+      <div class="envoi">
+        <p id="etat" role="status" aria-live="polite"></p>
+        <button type="submit" id="bouton-envoi">Envoyer mes réponses</button>
+      </div>
+    </form>
+  </main>
+
+  <footer class="pied">Biodiversité Québec · Observer, Analyser, Partager</footer>
+
+  <script src="config.js"></script>
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
